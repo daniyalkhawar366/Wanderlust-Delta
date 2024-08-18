@@ -1,0 +1,127 @@
+<% layout("/layouts/boilerplate")%>
+
+<style>
+.tag-area {
+    padding: 1rem;
+    outline: none;
+    width: 600px;
+    border: 2px solid;
+    border-radius: 5px;
+    transition: all 0.2s;
+    cursor: text;
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+.tag-area ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.tag {
+    padding: 5px;
+    padding-left: 10px;
+    background: #353535;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.5rem;
+    color: white;
+}
+
+.tag button {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.tag-area select {
+    margin-left: auto;
+    width: 120px;
+    max-width: 150px;
+    margin: 0.5rem;
+    padding: 0.2rem;
+}
+
+</style>
+
+<body>
+<div class="row">
+    <div class="col-8 offset-2">
+        <br><br>
+    <h3>Create a New Listing</h3>
+    <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input name="listing[title]" placeholder="Enter title" type="text" class="form-control" required>
+            <div class="invalid-feedback">Title should be valid</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="listing[description]" class="form-control" required></textarea>
+            <div class="invalid-feedback">Description should be valid</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="tags" class="form-label">Category</label>
+            <div class="tag-area" tabindex="0">
+                <ul id="tag-list"></ul>
+                <select id="tag-dropdown" class="form-select" name="listing[tag]" required>
+                    <option value="" disabled selected>Select a tag</option>
+                    <option value="Rooms">Rooms</option>
+                    <option value="Mountains">Mountains</option>
+                    <option value="Snowy">Snowy</option>
+                    <option value="Camping">Camping</option>
+                    <option value="Pool">Pool</option>
+                    <option value="Farms">Farms</option>
+                    <option value="Castle">Castle</option>
+                    <option value="City">City</option>
+                </select>
+                
+            </div>
+            <div class="invalid-feedback">Please select a tag</div>
+        </div>  
+
+        <div class="mb-3">
+            <label for="image" class="form-label">Upload Listing Image</label>
+            <input name="listing[image]" type="file" class="form-control" required>
+        </div>
+
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label for="price" class="form-label">Price</label>
+                <input name="listing[price]" placeholder="Enter price" type="number" class="form-control" required>
+                <div class="invalid-feedback">Price should be valid</div>
+            </div>
+    
+            <div class="mb-3 col-md-8">
+                <label for="country" class="form-label">Country</label>
+                <input name="listing[country]" placeholder="Enter Country" type="text" class="form-control" required>
+                <div class="invalid-feedback">Country should be valid</div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input name="listing[location]" placeholder="Enter location" type="text" class="form-control" required>
+            <div class="invalid-feedback">Location should be valid</div>
+        </div>
+
+        <button class="btn btn-dark" id="add-btn">Add</button>
+        <br><br>
+    </form>
+    </div>
+</div>
+
+
+</body>

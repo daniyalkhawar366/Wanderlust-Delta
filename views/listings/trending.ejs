@@ -1,0 +1,26 @@
+<% layout("/layouts/boilerplate")%>
+
+<div class="trending-header mt-5 mb-4 text-center">
+  <h2 class="display-3 font-weight-bold text-primary">Discover the Hottest Listings</h2>
+  <p class="text-muted">Handpicked destinations trending right now</p>
+</div>
+
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+
+    <% for(listing of trendListings) {%>
+        <a href="/listings/<%=listing._id%>" class="listing-link">
+            <div class="card col listing-card">
+                <img src="<%=listing.image.url%>" class="card-img-top" alt="listing_image" style="height:20rem">
+                <div class="card-img-overlay"></div>
+                <div class="card-body">
+                  <p class="card-text">
+                    <b><%=listing.title%></b>
+                    <br>
+                    &#8360; <%=listing.price.toLocaleString("en-PK")%> / night
+                  </p>
+        
+                </div>
+            </div>
+        </a>
+        <%}%>
+</div>
