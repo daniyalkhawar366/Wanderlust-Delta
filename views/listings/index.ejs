@@ -23,6 +23,30 @@
     text-decoration: none;
     color:black;
   }
+  @media (max-width: 768px) {
+  #filters {
+    display: none;
+  }
+}
+
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-item i {
+  margin-right: 10px;
+}
+.category{
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
 </style>
 <body>
      <div id="filters">
@@ -89,6 +113,24 @@
       </a>
       
      </div>
+
+<div class="dropdown d-md-none">
+  <button class="btn btn-secondary dropdown-toggle category" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+    Categories
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <li><a class="dropdown-item" href="/listings/trending"><i class="fa-solid fa-fire"></i> Trending</a></li>
+    <li><a class="dropdown-item" href="/listings/rooms"><i class="fa-solid fa-bed"></i> Rooms</a></li>
+    <li><a class="dropdown-item" href="/listings/cities"><i class="fa-solid fa-mountain-city"></i> Iconic Cities</a></li>
+    <li><a class="dropdown-item" href="/listings/mountains"><i class="fa-solid fa-mountain"></i> Mountains</a></li>
+    <li><a class="dropdown-item" href="/listings/castles"><i class="fa-brands fa-fort-awesome"></i> Castles</a></li>
+    <li><a class="dropdown-item" href="/listings/pools"><i class="fa-solid fa-person-swimming"></i> Amazing Pools</a></li>
+    <li><a class="dropdown-item" href="/listings/camping"><i class="fa-solid fa-campground"></i> Camping</a></li>
+    <li><a class="dropdown-item" href="/listings/farms"><i class="fa-solid fa-cow"></i> Farms</a></li>
+    <li><a class="dropdown-item" href="/listings/snowy"><i class="fa-solid fa-snowflake"></i> Snowy</a></li>
+  </ul>
+</div>
+
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
         <% for(listing of allListings) {%>
             <a href="/listings/<%=listing._id%>" class="listing-link">

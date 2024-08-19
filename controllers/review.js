@@ -12,6 +12,14 @@ module.exports.createReview=async (req,res)=>{
     await listing.save();
 
     req.flash("success","New Review Created!");
+    let newTag = listing.reviews.length >= 3 ? 'Trending' : listing.tag;
+        if (listing.reviews.length >= 3 && listing.tag !== 'Trending') {
+            await Listing.findByIdAndUpdate(
+                listing._id, 
+                { tag: 'Trending' },
+                { new: true }
+            );
+        }
     res.redirect(`/listings/${listing._id}`);
 };
 
