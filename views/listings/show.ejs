@@ -9,6 +9,110 @@
         width:200px;
     }
 }
+        .btns {
+            display: flex;
+            gap: 10px; /* space between buttons */
+            justify-content: flex-start; /* align to the start of the container */
+            margin-top: 20px; /* space above the buttons */
+            margin-left:270px;
+        }
+
+        .btns .btn {
+            min-width: 100px; /* ensure buttons have consistent width */
+        }
+
+        #calendar {
+            max-width: 100%;
+            width: 60%;
+            height: 300px;
+            margin-left: 300px;
+            background-color: #f7f7f7; 
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px; 
+        }
+        #calendar:hover{
+            cursor:pointer;
+        }
+        .fc-daygrid-day-number {
+            color: #fff; 
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .fc-daygrid-day-top {
+            background-color: #fe424d; 
+            color: #fff;
+            border-radius: 5px;
+            padding: 5px; 
+        }
+        .fc-event {
+            border-radius: 5px;
+            padding: 2px 5px;
+            color: #ffffff;
+        }
+
+        .fc-event.event-booked {
+            background-color: #f44336; 
+        }
+
+        .fc-event.event-available {
+            background-color: #ffffff; 
+        }
+
+        .fc-toolbar-title {
+            color: #fe424d;;
+            font-weight: bold;
+            font-size: 0.6em;
+        }
+        .fc-prev-button, .fc-next-button {
+            padding: 5px 10px;
+            background-color: #fe424d;
+            color: #fff; 
+            border-radius: 5px;
+            border: none; 
+        }
+
+        .fc-prev-button:hover, .fc-next-button:hover {
+            background-color: #e63946; 
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            #calendar {
+        width: 100%; /* Full width on mobile */
+        margin-left: 0; /* Remove left margin */
+        padding: 10px; /* Adjust padding */
+    }
+    
+    .fc-prev-button, .fc-next-button {
+        font-size: 10px; /* Adjust button font size */
+    }
+
+    .fc-button-primary {
+        padding: 4px; /* Adjust padding for better fit */
+        font-size: 8px !important; /* Adjust font size for mobile */
+    }
+
+    .fc-button-prev, .fc-button-next {
+        padding: 4px !important; /* Adjust padding for arrow buttons */
+        font-size: 2px !important; /* Adjust font size for arrow buttons */
+    }
+    
+    .fc-daygrid-day-number {
+        font-size: 12px; /* Reduce font size for day numbers */
+    }
+
+    .fc-event {
+        padding: 2px 4px; /* Adjust padding for events */
+        font-size: 6px; /* Reduce font size for events */
+    }
+
+    .fc-daygrid-day-top {
+        font-size: 10px; /* Reduce font size for mobile */
+        padding: 2px; /* Reduce padding */
+        height: auto; /* Ensure headers don't overflow */
+    }
+}
 </style>
 <body>
     <div class="row mt-3">
@@ -40,14 +144,16 @@
                 </div>
             </div>
             <br>
-            <%if(currUser && listing.owner._id.equals(currUser._id)) {%>
-            <div class="btns">
-                <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
-                <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-                    <button class="btn btn-dark offset-5 del-btn">Delete</button>
-                </form>
-            </div>
-            <%}%>
+            <% if (currUser && (listing.owner._id.equals(currUser._id) || isAdmin)) { %>
+                <div class="btns">
+                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark">Edit</a>
+                    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            <% } %>
+            
+            
             <div class="col-8 offset-3 mb-3">
             <%if(currUser) {%>
                 <hr>
@@ -104,6 +210,10 @@
 
             </div>
         </div>
+        
+    <div id="calendar" class="mb-3 mt-3">
+    </div>
+
     </div>
 </body>
 
@@ -130,11 +240,64 @@
     const ui = H.ui.UI.createDefault(map, defaultLayers);
     const behavior = new H.mapevents.Behavior(mapEvents);
 
-    // Create a red marker with reduced opacity
     const marker = new H.map.Marker({ lat: coordinates[1], lng: coordinates[0] }, {
         icon: new H.map.Icon('<svg width="30" height="30" xmlns="http://www.w3.org/2000/svg"><circle cx="15" cy="15" r="12" fill="red" fill-opacity="0.6" /></svg>')
     });
     map.addObject(marker);
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var bookedDates = []; // Store booked dates here
 
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next',
+                center: 'title',
+                right: 'dayGridMonth'
+            },
+            events: bookedDates.map(date => ({
+                title: 'Booked',
+                start: date,
+                end: date,
+                color: '#fe424d', // Booked color
+                className: 'event-booked',
+                extendedProps: {
+                    status: 'booked'
+                }
+            })),
+            dateClick: function(info) {
+                var dateStr = info.dateStr; // ISO date string
+                
+                // Check if the date is already booked
+                var existingEvent = bookedDates.includes(dateStr);
+
+                if (!existingEvent) {
+                    if (confirm(`Do you want to book ${dateStr}?`)) {
+                        // Book the date by adding it to bookedDates
+                        bookedDates.push(dateStr);
+
+                        // Add the booked event to the calendar
+                        calendar.addEvent({
+                            title: 'Booked',
+                            start: dateStr,
+                            end: dateStr,
+                            color: '#fe424d', // Booked color
+                            className: 'event-booked',
+                            extendedProps: {
+                                status: 'booked'
+                            }
+                        });
+
+                        alert('Booking successful!');
+                    }
+                } else {
+                    alert('This date is already booked.');
+                }
+            }
+        });
+        calendar.render();
+    });
+</script>

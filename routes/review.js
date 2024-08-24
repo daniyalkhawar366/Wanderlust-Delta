@@ -5,11 +5,13 @@ const Review=require("../models/review.js");
 const Listing=require("../models/listing.js");
 const methodOverride = require("method-override");
 router.use(methodOverride("_method"));
-const {validateReview, isReviewAuthor}=require("../middleware.js");
+const {validateReview, isReviewAuthor,adminAuth}=require("../middleware.js");
 const {isLoggedIn}=require("../middleware.js");
 
 const reviewController=require("../controllers/review.js");
-//Reviews
+
+router.use(adminAuth);
+
 router.post("/", isLoggedIn,validateReview, wrapAsync(reviewController.createReview));
 
 //Delete Review Route

@@ -106,8 +106,8 @@ body{
 }
 
 .btns{
-    display:flex;
-    margin-bottom:3rem;
+    display:flex !important;
+    margin-bottom:3rem !important;
 }
 
 .show-card{
